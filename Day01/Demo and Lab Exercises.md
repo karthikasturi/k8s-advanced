@@ -1,4 +1,4 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" class="logo" width="120"/>
+# 
 
 # Demo and Lab Exercises: Kubernetes Scheduling and Taints/Tolerations
 
@@ -408,8 +408,6 @@ spec:
 kubectl logs -n kube-system -l component=kube-scheduler
 ```
 
-
-
 # Check node resources
 
 ```bash
@@ -434,5 +432,3 @@ kubectl taint nodes --all workload:NoExecute-
 # Remove labels
 kubectl label nodes --all hardware-
 ```
-
-
