@@ -69,10 +69,9 @@ spec:
   - port: 80
     targetPort: 80
   type: LoadBalancer
-
 ```
 
-:wq### **Step 2: Deploy Blue Environment**
+### **Step 2: Deploy Blue Environment**
 
 Deploy blue environment
 
@@ -143,7 +142,6 @@ spec:
           limits:
             cpu: 200m
             memory: 256Mi
-
 ```
 
 ### **Step 4: Deploy and Test Green Environment**
