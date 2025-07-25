@@ -15,7 +15,6 @@ kubectl wait --for=condition=Ready pod -l control-plane=controller-manager -n ga
 **Step 2**: Create constraint template for allowed registries
 
 ```yaml
-# allowed-registries-template.yaml
 apiVersion: templates.gatekeeper.sh/v1beta1
 kind: ConstraintTemplate
 metadata:
@@ -26,27 +25,35 @@ spec:
       names:
         kind: AllowedRegistries
       validation:
-        type: object
-        properties:
-          registries:
-            type: array
-            items:
-              type: string
+        openAPIV3Schema:
+          type: object
+          properties:
+            registries:
+              type: array
+              items:
+                type: string
   targets:
     - target: admission.k8s.gatekeeper.sh
       rego: |
         package allowedregistries
 
         violation[{"msg": msg}] {
-          container := input.review.object.spec.containers[_]
-          not starts_with(container.image, input.parameters.registries[_])
+          some i
+          container := input.review.object.spec.containers[i]
+          not allowed_registry(container.image)
           msg := sprintf("Container image '%v' is not from an allowed registry", [container.image])
         }
 
         violation[{"msg": msg}] {
-          container := input.review.object.spec.initContainers[_]
-          not starts_with(container.image, input.parameters.registries[_])
+          some i
+          container := input.review.object.spec.initContainers[i]
+          not allowed_registry(container.image)
           msg := sprintf("Init container image '%v' is not from an allowed registry", [container.image])
+        }
+
+        allowed_registry(image) {
+          some j
+          startswith(image, input.parameters.registries[j])
         }
 ```
 
